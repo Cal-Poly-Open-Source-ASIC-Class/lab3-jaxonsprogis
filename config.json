@@ -1,8 +1,8 @@
 {
 	"DESIGN_NAME": "dualportram",
 	"VERILOG_FILES": ["dir::rtl/*.sv","dir::rtl/*.v" ],
-	"CLOCK_PERIOD": 9,
-	"CLOCK_PORT": "clk",
+	"CLOCK_PERIOD": 35,
+	"CLOCK_PORT": "clk_i",
 	"FP_PDN_VOFFSET": 7,
 	"FP_PDN_HOFFSET": 7,
 	"FP_PDN_SKIPTRIM": true,
@@ -14,14 +14,14 @@
 	"VDD_NETS": ["VPWR"],
     	"GND_NETS": ["VGND"],
 	"MACROS": {
-		"modulename": {
+		"DFFRAM256x32": {
 			"instances": {
-				"instance1": {
-					"location": [100, 750],
-					"orientation": "FS"},
-				"instance2": {
-              				"location": [100, 750],
-              				"orientation": "FS"}
+				"mem0": {
+					"location": [100, 100],
+					"orientation": "N"},
+				"mem1": {
+              				"location": [100, 800],
+              				"orientation": "N"}
 				},
          		"gds": ["dir::macros/dffram256x32/layout/gds/DFFRAM256x32.gds.gz"],
 			"lef": ["dir::macros/dffram256x32/layout/lef/DFFRAM256x32.lef"],
@@ -30,10 +30,14 @@
 	              		"min*": ["dir::macros/dffram256x32/timing/spef/DFFRAM256x32.min.spef"],
 	              		"nom*": ["dir::macros/dffram256x32/timing/spef/DFFRAM256x32.nom.spef"]},
          		"lib": {
-              			"*": "dir::macros/dffram256x32/timing/lib"}
+				"max*": ["dir::macros/dffram256x32/timing/lib/nom/DFFRAM256x32.Slowest.lib"],
+	              		"min*": ["dir::macros/dffram256x32/timing/lib/nom/DFFRAM256x32.Fastest.lib"],
+	              		"nom*": ["dir::macros/dffram256x32/timing/lib/nom/DFFRAM256x32.Typical.lib"]},
+			"nl": ["dir::macros/dffram256x32/hdl/gl/DFFRAM256x32.v"],
+          		"pnl": ["dir::macros/dffram256x32/hdl/gl/DFFRAM256x32.v"]
 		}
      },
-     "PDN_MACRO_CONNECTIONS": ["instance1 VPWR VGND VPWR VGND", "instance2 VPWR VGND VPWR VGND"],
+     "PDN_MACRO_CONNECTIONS": ["mem0 VPWR VGND VPWR VGND", "mem1 VPWR VGND VPWR VGND"],
      "FP_PDN_VWIDTH": 3.1,
      "FP_PDN_HWIDTH": 3.1,
      "FP_PDN_VSPACING": 15.5,

@@ -2,176 +2,165 @@
 
 module tb_dualportram;
 
-  logic clk;
-  logic rst;
+	logic clk;
+	logic rst;
 
-  // Port A signals
-  logic pA_wb_stb, pA_wb_we;
-  logic [3:0] pA_wb_sel;
-  logic [10:0] pA_wb_addr;
-  logic [31:0] pA_wb_data_in;
-  logic [31:0] pA_wb_data_out;
-  logic pA_wb_ack;
-  logic pA_wb_stall;
+	// Port A signals
+	logic pA_wb_stb, pA_wb_we;
+	logic [3:0] pA_wb_sel;
+	logic [10:0] pA_wb_addr;
+	logic [31:0] pA_wb_data_in;
+	logic [31:0] pA_wb_data_out;
+	logic pA_wb_ack;
+	logic pA_wb_stall;
 
-  // Port B signals
-  logic pB_wb_stb, pB_wb_we;
-  logic [3:0] pB_wb_sel;
-  logic [10:0] pB_wb_addr;
-  logic [31:0] pB_wb_data_in;
-  logic [31:0] pB_wb_data_out;
-  logic pB_wb_ack;
-  logic pB_wb_stall;
+	// Port B signals
+	logic pB_wb_stb, pB_wb_we;
+	logic [3:0] pB_wb_sel;
+	logic [10:0] pB_wb_addr;
+	logic [31:0] pB_wb_data_in;
+	logic [31:0] pB_wb_data_out;
+	logic pB_wb_ack;
+	logic pB_wb_stall;
 
-  `ifdef USE_POWER_PINS
-	wire VPWR;
-	wire VGND;
-	assign VPWR = 1;
-	assign VGND = 0;
-	
-  `endif
+	`ifdef USE_POWER_PINS
+		wire VPWR;
+		wire VGND;
+		assign VPWR = 1;
+		assign VGND = 0;
 
-  // Instantiate DUT
-  dualportram dut (
-    .clk_i(clk),
-    .rst_i(rst),
-    .pA_wb_stb_i(pA_wb_stb),
-    .pA_wb_we_i(pA_wb_we),
-    .pA_wb_sel_i(pA_wb_sel),
-    .pA_wb_addr_i(pA_wb_addr),
-    .pA_wb_data_i(pA_wb_data_in),
-    .pA_wb_data_o(pA_wb_data_out),
-    .pA_wb_ack_o(pA_wb_ack),
-    .pA_wb_stall_o(pA_wb_stall),
-    .pB_wb_stb_i(pB_wb_stb),
-    .pB_wb_we_i(pB_wb_we),
-    .pB_wb_sel_i(pB_wb_sel),
-    .pB_wb_addr_i(pB_wb_addr),
-    .pB_wb_data_i(pB_wb_data_in),
-    .pB_wb_data_o(pB_wb_data_out),
-    .pB_wb_ack_o(pB_wb_ack),
-    .pB_wb_stall_o(pB_wb_stall)
-    `ifdef USE_POWER_PINS
-	, .VPWR(VPWR),
-	.VGND(VGND)
-    `endif
-  );
+	`endif
 
-localparam CLK_PERIOD = 10;
-always begin
-    #(CLK_PERIOD/2) 
-    clk<=~clk;
-end
+	// Instantiate DUT
+	dualportram dut (
+		.clk_i(clk),
+		.rst_i(rst),
+		.pA_wb_stb_i(pA_wb_stb),
+		.pA_wb_we_i(pA_wb_we),
+		.pA_wb_sel_i(pA_wb_sel),
+		.pA_wb_addr_i(pA_wb_addr),
+		.pA_wb_data_i(pA_wb_data_in),
+		.pA_wb_data_o(pA_wb_data_out),
+		.pA_wb_ack_o(pA_wb_ack),
+		.pA_wb_stall_o(pA_wb_stall),
+		.pB_wb_stb_i(pB_wb_stb),
+		.pB_wb_we_i(pB_wb_we),
+		.pB_wb_sel_i(pB_wb_sel),
+		.pB_wb_addr_i(pB_wb_addr),
+		.pB_wb_data_i(pB_wb_data_in),
+		.pB_wb_data_o(pB_wb_data_out),
+		.pB_wb_ack_o(pB_wb_ack),
+		.pB_wb_stall_o(pB_wb_stall)
+		`ifdef USE_POWER_PINS
+			, .VPWR(VPWR),
+			.VGND(VGND)
+		`endif
+	);
 
-initial begin
-    // Name as needed
-    $dumpfile("tb_dualportram.vcd");
-    $dumpvars(0);
-end
+	localparam CLK_PERIOD = 10;
+	always begin
+	#(CLK_PERIOD/2) 
+	clk<=~clk;
+	end
 
-initial #100000 $error("Timeout");
+	initial begin
+	// Name as needed
+	$dumpfile("tb_dualportram.vcd");
+	$dumpvars(2,tb_dualportram);
+	end
 
-  task reset();
-    rst = 1;
-    pA_wb_stb = 0;
-    pA_wb_we = 0;
-    pA_wb_sel = 4'b1111;
-    pA_wb_addr = 0;
-    pA_wb_data_in = 0;
+	initial #100000 $error("Timeout");
 
-    pB_wb_stb = 0;
-    pB_wb_we = 0;
-    pB_wb_sel = 4'b1111;
-    pB_wb_addr = 0;
-    pB_wb_data_in = 0;
+	task reset();
+		rst = 1;
+		pA_wb_stb = 0;
+		pA_wb_we = 0;
+		pA_wb_sel = 4'b1111;
+		pA_wb_addr = 0;
+		pA_wb_data_in = 0;
 
-    #20;
-    rst = 0;
-    #20;
-  endtask
+		pB_wb_stb = 0;
+		pB_wb_we = 0;
+		pB_wb_sel = 4'b1111;
+		pB_wb_addr = 0;
+		pB_wb_data_in = 0;
 
-  task write_A(input [10:0] addr, input [31:0] data);
-    @(posedge clk);
-    pA_wb_stb = 1;
-    pA_wb_we = 1;
-    pA_wb_addr = addr;
-    pA_wb_data_in = data;
-    pA_wb_sel = 4'b1111;
+		#20;
+		rst = 0;
+		#20;
+	endtask
 
-//     wait (pA_wb_ack && !pA_wb_stall);
-    @(posedge clk);
-    pA_wb_stb = 0;
-    pA_wb_we = 0;
-  endtask
+	task write_A(input [10:0] addr, input [31:0] data);
+		@(posedge clk);
+		pA_wb_stb = 1;
+		pA_wb_we = 1;
+		pA_wb_addr = addr;
+		pA_wb_data_in = data;
+		pA_wb_sel = 4'b1111;
+		@(posedge clk);
+		pA_wb_stb = 0;
+		pA_wb_we = 0;
+	endtask
 
-  task write_B(input [10:0] addr, input [31:0] data);
-    @(posedge clk);
-    pB_wb_stb = 1;
-    pB_wb_we = 1;
-    pB_wb_addr = addr;
-    pB_wb_data_in = data;
-    pB_wb_sel = 4'b1111;
+	task write_B(input [10:0] addr, input [31:0] data);
+		@(posedge clk);
+		pB_wb_stb = 1;
+		pB_wb_we = 1;
+		pB_wb_addr = addr;
+		pB_wb_data_in = data;
+		pB_wb_sel = 4'b1111;
+		@(posedge clk);
+		pB_wb_stb = 0;
+		pB_wb_we = 0;
+	endtask
 
-//     wait (pB_wb_ack && !pB_wb_stall);
-    @(posedge clk);
-    pB_wb_stb = 0;
-    pB_wb_we = 0;
-  endtask
+	task read_A(input [10:0] addr);
+		pA_wb_stb = 1;
+		pA_wb_we = 0;
+		pA_wb_addr = addr;
+		pA_wb_sel = 4'b1111;
+		@(posedge clk);
+		pA_wb_stb = 0;
+	endtask
 
-  task read_A(input [10:0] addr);
-    pA_wb_stb = 1;
-    pA_wb_we = 0;
-    pA_wb_addr = addr;
-    pA_wb_sel = 4'b1111;
+	task read_B(input [10:0] addr);
+		pB_wb_stb = 1;
+		pB_wb_we = 0;
+		pB_wb_addr = addr;
+		pB_wb_sel = 4'b1111;
+		@(posedge clk);
+		pB_wb_stb = 0;
+	endtask
 
-//     wait (pA_wb_ack && !pA_wb_stall);
-    @(posedge clk);
-    $display("Port A Read from %0d = %0h", addr, pA_wb_data_out);
-    pA_wb_stb = 0;
-  endtask
+	initial begin
+		clk = 0;
+		reset();
 
-  task read_B(input [10:0] addr);
-    pB_wb_stb = 1;
-    pB_wb_we = 0;
-    pB_wb_addr = addr;
-    pB_wb_sel = 4'b1111;
+		// concurrent writes to different RAMs (should succeed)
+		fork
+			write_A(11'b00000000100, 32'hAAAA_BBBB);  // RAM0
+			write_B(11'b10000001000, 32'hCCCC_DDDD);  // RAM1
+		join
 
-//     wait (pB_wb_ack && !pB_wb_stall);
-    @(posedge clk);
-    $display("Port B Read from %0d = %0h", addr, pB_wb_data_out);
-    pB_wb_stb = 0;
-  endtask
+		// read back both
+		read_A(11'b00000000100);
+		read_B(11'b10000001000);
 
-  initial begin
-    $display("Starting dualportram testbench...");
-    clk = 0;
-    reset();
+		// concurrent writes to SAME RAM (should stall one)
+		fork
+			write_A(11'b00000000100, 32'h1111_2222); 
+			write_B(11'b00000001000, 32'h3333_4444);  
+		join
 
-    // Parallel writes to different RAMs (should succeed)
-    fork
-      write_A(11'b00000000100, 32'hAAAA_BBBB);  // RAM0
-      write_B(11'b10000001000, 32'hCCCC_DDDD);  // RAM1
-    join
+		// read back both
+		read_A(11'b00000000100); 
+		read_B(11'b00000001000); 
 
-    // Read back both
-    read_A(11'b00000000100);  // expect AAAA_BBBB
-    read_B(11'b10000001000);  // expect CCCC_DDDD
-
-    // Parallel writes to SAME RAM (should stall one)
-    fork
-      write_A(11'b00000000100, 32'h1111_2222);  // RAM0
-      write_B(11'b00000001000, 32'h3333_4444);  // RAM0
-    join
-    // Read back both
-    read_A(11'b00000000100);  // expect 1111_2222
-    read_B(11'b00000001000);  // expect 3333_4444
-
-    @(posedge clk)
-    @(posedge clk)
-    @(posedge clk)
-    @(posedge clk)
-    $display("Testbench completed.");
-    $finish;
-  end
+		@(posedge clk)
+		@(posedge clk)
+		@(posedge clk)
+		@(posedge clk)
+		$finish;
+	end
 
 endmodule
